@@ -29,16 +29,13 @@ KfConfig >> makeRdObj [
 { #category : #initialization }
 KfConfig >> set: optionName to: optionValue [
 	"Set the given option name to value. Both are converted to strings."
-	| optName optVal err res |
-	optName := optionName asString.
-	optVal := optionValue asString.
-	err := ExternalAddress allocate: 512.
+	| res |
 	
-	res := self ffiConfSet: optName to: optVal err: err. 
+	res := self ffiConfSet: optionName asString 
+		to: optionValue asString 
+		err: KfErrorMsg value. 
 		
-	res isZero ifFalse: [ 
-		Error new signal: err fromCString.
-	].	
+	KfErrorMsg checkReturn: res.
 	^ self
 
 ]
